@@ -98,6 +98,7 @@ object ScalaTest1 {
     println("age =" + age, "name = " + name)
   }
 }
+
 ```
 
     上面三行打印出来的结果分别是：  
