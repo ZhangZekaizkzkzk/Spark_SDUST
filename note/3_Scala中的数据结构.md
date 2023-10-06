@@ -118,5 +118,150 @@ dynamicBuffer2D.remove(1)
 // 删除一列
 dynamicBuffer2D.foreach(row => row.remove(0))
 ```
-
 ## 列表
+***有顺序***、***可重复***
+### 不可变列表：List
+#### 定义列表
+```scala
+val list:List[Int] = List(1,2,3,4,5)
+// 其实下面这样就可以，同样适用于至简原则。
+val list = List(5,4,3,2,1) 
+```
+#### 列表增加数据
+```scala
+// 使用“::”合并数据
+// 可以往里加数字
+List1 = 5:list // （1，2，3，4，5） → （5，1，2，3，4，5）
+// 也可以合并集合
+list2 = list1::list // （5，1，2）+（3，4，5） → （5，1，2，3，4，5）
+```
+### 可变列表
+基本情况和上面相同
+定义时改成“ListBuffer”
+```scala
+val buffer = ListBuffer(1,2,3,4)
+```
+多了新增和修改数据的几个操作,这边和数组一样
+```scala
+// 增加数据
+buffer += (5) // (1,2,3,4,5)
+buffer.append(6) // (1,2,3,4,5,6)
+// 插入数据
+buffer.insert(1,2) //(1,2,2,3,4,5,6)
+// 修改数据
+buffer(1) = 6 // (1,6,2,3,4,5,6)
+buffer(1,7) //(1,7,2,3,4,5,6)
+// 删除数据
+buffer.-(5) // (1,7,2,3,4,5,6)
+buffer.remove(5) // (1,7,2,3,4,6)
+```
+## Set集合
+***无序***、***不可重复***<br>
+不可变用 *Set*<br>
+可变要用 *mutable.Set*<br>
+没其他可说的了，内容都一样
+
+## Map集合（K-V）
+不可变用 *Map*<br>
+可变要用 *mutable.Map*<br>
+
+1. 创建Map
+```scala
+  val map = Map( "a"->1, "b"->2, "c"->3 )
+```
+2. 获取Map的数据
+```scala
+  print(map.get("a"))
+```
+但是这里get返回的是一个特殊类型选项，有值返回Some,无值返回None,所以如果需要获取a的对应值需要
+```scala
+print(map.get("a").get)
+```
+如果对应的值不存在但是还是.get了，比如
+```scala
+print(map.get("d")) // 前面没用d这个键
+```
+那么会报错
+```
+Exception in thread "main" java.util.NoSuchElementException: None.get
+```
+可是我不想专门看一下d到底用没用，所以应该
+```scala
+println(map.getOrElse("d", 0))
+```
+如果找到了，打印d对应的值；如果没找到，打印0
+
+3. 可变集合
+操作差不多
+```scala
+ // 向集合增加数据
+ map.+=("d"->4) // (a1,b2,c3,d4)
+ // 将数值 4 添加到集合，并把集合中原值 1 返回
+ val maybeInt: Option[Int] = map.put("a", 4) // (a4,b2,c3,d4)
+ //（4）删除数据
+ map.-=("b", "c") // (a4,d4)
+ //（5）修改数据
+ map.update("d",5) //(a4,d5)
+ map("d") = 5 // 和上一行一样的功能
+```
+ps:这几个全有一个**update**方法，我全用这个不就好了吗...
+
+### 元组
+***最大只能有22个元素***、***不可变***
+```scala
+// 定义
+val tuple: (Int, String, Boolean) = (40,"bobo",true)
+// 获取数据
+println(tuple._1)
+println(tuple._2)
+println(tuple._3)
+// 或者
+println(tuple.productElement(0))
+```
+
+## 关于遍历中的foreach方法
+PDF中好像没讲，所以问GPT
+```
+foreach方法是用于对集合（例如数组、列表、集等）中的每个元素执行指定的操作的方法。它是一种迭代方法，通常用于遍历集合中的元素并对每个元素执行某个操作，例如打印元素、累积计算等。
+foreach方法的基本语法如下：
+    collection.foreach(function)
+其中：
+    collection是你要遍历的集合，可以是数组、列表、集等Scala集合类型。
+    function是一个接受集合中元素作为参数的函数，用于定义对每个元素执行的操作。
+```
+然后让它举了几个例子
+
+1. 遍历数组并求和
+```scala
+// 创建一个整数数组
+val numbers = Array(1, 2, 3, 4, 5)
+
+// 使用foreach方法计算数组元素的总和
+var sum = 0
+numbers.foreach(element => sum += element)
+
+println(s"数组元素的总和是：$sum")
+```
+2. 遍历列表筛选元素
+```scala
+// 创建一个字符串列表
+val fruits = List("apple", "banana", "cherry", "date", "elderberry")
+
+// 使用foreach方法筛选出包含字母'a'的水果并打印
+fruits.foreach {
+  case fruit if fruit.contains("a") => println(fruit)
+  case _ => // 忽略不包含字母'a'的元素
+}
+```
+3. 遍历自定义对象打印信息
+```scala
+// 定义一个自定义的Person类
+case class Person(name: String, age: Int)
+
+// 创建一个包含Person对象的列表
+val people = List(Person("Alice", 30), Person("Bob", 25), Person("Charlie", 35))
+
+// 使用foreach方法打印每个人的信息
+people.foreach(person => println(s"Name: ${person.name}, Age: ${person.age}"))
+```
+***谢谢GPT***
