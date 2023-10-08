@@ -8,12 +8,15 @@ object _10coalesce {
     val sc = new SparkContext(sparkConf)
 
     val rdd = sc.makeRDD(List(1,2,3,4,5,6),6)
-    println("________6分区+不shuffle__________")
+
     val rdd2 = rdd.coalesce(6)
-    println("________3分区+不shuffle__________")
+    rdd2.saveAsTextFile("output2")
+
     val rdd3 = rdd.coalesce(3)
-    println("________3分区+shuffle__________")
+    rdd3.saveAsTextFile("output3")
+
     val rdd4 = rdd.coalesce(3,shuffle = true)
+    rdd4.saveAsTextFile("output4")
 
   }
 }
